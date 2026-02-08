@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <h1>Your Conversations</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Secure communication with connected institutions and
+        faculty</p>
+
+    {% if connections %}
+    <div class="grid grid-1">
+        {% for other_user in connections %}
+        <a href="{{ url_for('chat', other_user_id=other_user.id) }}" class="card chat-connection-link"
+            style="margin-bottom: 1rem; display: block; text-decoration: none; color: inherit;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div
+                        style="width: 50px; height: 50px; background: var(--primary-light); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold;">
+                        {% if other_user.user_type == 'college' %}
+                        🏫
+                        {% else %}
+                        👨‍🏫
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h3 style="margin: 0;">
+                            {% if other_user.user_type == 'college' %}
+                            {{ other_user.college_profile.college_name }}
+                            {% else %}
+                            {{ other_user.faculty_profile.full_name }}
+                            {% endif %}
+                        </h3>
+                        <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">
+                            {{ other_user.user_type|capitalize }}
+                        </p>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span class="btn btn-outline">Open Chat</span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 4rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">💬</div>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">No active conversations yet.</p>
+        {% if current_user.user_type == 'college' %}
+        <a href="{{ url_for('search_faculty') }}" class="btn btn-primary">Find Faculty to Connect</a>
+        {% else %}
+        <p style="font-size: 0.9rem;">Wait for colleges to send you connection requests!</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

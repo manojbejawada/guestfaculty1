@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - Faculty{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <div style="max-width: 700px; margin: 0 auto;">
+        <h1 style="margin-bottom: 0.5rem;">Edit Faculty Profile</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Complete your profile to get discovered by
+            colleges</p>
+
+        <form method="POST" action="{{ url_for('faculty_profile') }}">
+            <div class="card">
+                <h3 style="color: var(--primary-light); margin-bottom: 1.5rem;">Basic Information</h3>
+
+                <div class="form-group">
+                    <label for="full_name">Full Name *</label>
+                    <input type="text" id="full_name" name="full_name" required value="{{ profile.full_name or '' }}"
+                        placeholder="Dr. John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" value="{{ profile.phone or '' }}"
+                        placeholder="+1 234 567 8900">
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" value="{{ profile.location or '' }}"
+                        placeholder="City, State">
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <h3 style="color: var(--primary-light); margin-bottom: 1.5rem;">Professional Details</h3>
+
+                <div class="form-group">
+                    <label for="qualification">Highest Qualification *</label>
+                    <input type="text" id="qualification" name="qualification" required
+                        value="{{ profile.qualification or '' }}" placeholder="Ph.D. in Computer Science">
+                </div>
+
+                <div class="form-group">
+                    <label for="experience_years">Years of Experience</label>
+                    <input type="number" id="experience_years" name="experience_years" min="0"
+                        value="{{ profile.experience_years or '' }}" placeholder="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="specialization">Specialization</label>
+                    <input type="text" id="specialization" name="specialization"
+                        value="{{ profile.specialization or '' }}" placeholder="Machine Learning, Data Science">
+                </div>
+
+                <div class="form-group">
+                    <label for="subjects">Subjects You Can Teach (comma-separated) *</label>
+                    <input type="text" id="subjects" name="subjects" required value="{{ profile.subjects or '' }}"
+                        placeholder="Data Structures, Algorithms, Python Programming">
+                    <small style="color: var(--text-muted); font-size: 0.875rem;">Separate multiple subjects with
+                        commas</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="availability">Availability Status</label>
+                    <select id="availability" name="availability">
+                        <option value="Available" {% if profile.availability=='Available' %}selected{% endif %}>
+                            Available</option>
+                        <option value="Partially Available" {% if profile.availability=='Partially Available'
+                            %}selected{% endif %}>Partially Available</option>
+                        <option value="Not Available" {% if profile.availability=='Not Available' %}selected{% endif %}>
+                            Not Available</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <h3 style="color: var(--primary-light); margin-bottom: 1.5rem;">About You</h3>
+
+                <div class="form-group">
+                    <label for="bio">Professional Bio</label>
+                    <textarea id="bio" name="bio" rows="5"
+                        placeholder="Tell colleges about your teaching experience, achievements, and what makes you unique...">{{ profile.bio or '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="linkedin_url">LinkedIn Profile URL</label>
+                    <input type="url" id="linkedin_url" name="linkedin_url" value="{{ profile.linkedin_url or '' }}"
+                        placeholder="https://linkedin.com/in/yourprofile">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save Profile</button>
+                <a href="{{ url_for('faculty_dashboard') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

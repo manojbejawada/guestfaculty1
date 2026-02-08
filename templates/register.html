@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - Guest Faculty System{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 3rem;">
+    <div style="max-width: 500px; margin: 0 auto;">
+        <div class="card">
+            <h1
+                style="text-align: center; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary-light), var(--secondary-color)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                Create Account</h1>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Join our community and get
+                started</p>
+
+            <form method="POST" action="{{ url_for('register') }}" autocomplete="off">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com"
+                        autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required minlength="6"
+                        placeholder="Minimum 6 characters" autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                    <label>I am a... <span
+                            style="color: var(--primary-light); font-size: 0.85rem; font-weight: 400;">(Click to
+                            select)</span></label>
+                    <input type="hidden" id="user_type" name="user_type" required>
+                    <div class="role-selector">
+                        <div class="role-option" data-role="faculty">
+                            <div class="role-icon">👨‍🏫</div>
+                            <div class="role-name">Faculty</div>
+                        </div>
+                        <div class="role-option" data-role="college">
+                            <div class="role-icon">🏛️</div>
+                            <div class="role-name">College</div>
+                        </div>
+                        <div class="role-option" data-role="student">
+                            <div class="role-icon">👨‍🎓</div>
+                            <div class="role-name">Student</div>
+                        </div>
+                    </div>
+                    <div id="role-error"
+                        style="color: var(--error-color); font-size: 0.875rem; margin-top: 0.5rem; display: none;">
+                        Please select your role
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create
+                    Account</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                Already have an account?
+                <a href="{{ url_for('login') }}"
+                    style="color: var(--primary-light); text-decoration: none; font-weight: 600;">Sign In</a>
+            </p>
+        </div>
+
+        <div class="card mt-3" style="background: rgba(99, 102, 241, 0.1); border-color: var(--primary-color);">
+            <h3 style="color: var(--primary-light); margin-bottom: 1rem; text-align: center;">📝 Next Steps</h3>
+            <ul style="color: var(--text-secondary); list-style: none; padding: 0;">
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: var(--primary-color);">1.</span> Create your account with email and password
+                </li>
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: var(--primary-color);">2.</span> Complete your profile with details
+                </li>
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: var(--primary-color);">3.</span> Start connecting with others
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Role selection functionality
+    const roleOptions = document.querySelectorAll('.role-option');
+    const userTypeInput = document.getElementById('user_type');
+    const roleError = document.getElementById('role-error');
+    const form = document.querySelector('form');
+
+    roleOptions.forEach(option => {
+        option.addEventListener('click', function () {
+            // Remove active class from all options
+            roleOptions.forEach(opt => opt.classList.remove('active'));
+
+            // Add active class to clicked option
+            this.classList.add('active');
+
+            // Set the hidden input value
+            userTypeInput.value = this.dataset.role;
+
+            // Hide error message
+            if (roleError) {
+                roleError.style.display = 'none';
+            }
+        });
+    });
+
+    // Form validation
+    form.addEventListener('submit', function (e) {
+        if (!userTypeInput.value) {
+            e.preventDefault();
+            if (roleError) {
+                roleError.style.display = 'block';
+                roleError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+</script>
+{% endblock %}

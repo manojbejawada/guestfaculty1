@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - Student{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <div style="max-width: 700px; margin: 0 auto;">
+        <h1 style="margin-bottom: 0.5rem;">Edit Student Profile</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Provide your information</p>
+
+        <form method="POST" action="{{ url_for('student_profile') }}">
+            <div class="card">
+                <h3 style="color: var(--info-color); margin-bottom: 1.5rem;">Personal Information</h3>
+
+                <div class="form-group">
+                    <label for="full_name">Full Name *</label>
+                    <input type="text" id="full_name" name="full_name" required value="{{ profile.full_name or '' }}"
+                        placeholder="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" value="{{ profile.phone or '' }}"
+                        placeholder="+1 234 567 8900">
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" value="{{ profile.city or '' }}" placeholder="Mumbai">
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <h3 style="color: var(--info-color); margin-bottom: 1.5rem;">Academic Information</h3>
+
+                <div class="form-group">
+                    <label for="college_name">College/University Name</label>
+                    <input type="text" id="college_name" name="college_name" value="{{ profile.college_name or '' }}"
+                        placeholder="ABC University">
+                </div>
+
+                <div class="form-group">
+                    <label for="course">Course/Program</label>
+                    <input type="text" id="course" name="course" value="{{ profile.course or '' }}"
+                        placeholder="B.Tech Computer Science">
+                </div>
+
+                <div class="form-group">
+                    <label for="semester">Current Semester</label>
+                    <input type="text" id="semester" name="semester" value="{{ profile.semester or '' }}"
+                        placeholder="5">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save Profile</button>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Schedule Online Class{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <div style="max-width: 600px; margin: 0 auto;">
+        <h1 style="margin-bottom: 0.5rem;">Schedule Video Class</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Host a Google Meet-style virtual session with {{
+            faculty.full_name }}</p>
+
+        <form method="POST">
+            <div class="card">
+                <div class="form-group">
+                    <label for="subject">Subject *</label>
+                    <input type="text" id="subject" name="subject" required placeholder="e.g. Advanced Mathematics">
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="date">Date *</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time *</label>
+                        <input type="time" id="time" name="time" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">Duration (Minutes)</label>
+                    <select id="duration" name="duration">
+                        <option value="30">30 Minutes</option>
+                        <option value="60" selected>60 Minutes</option>
+                        <option value="90">90 Minutes</option>
+                        <option value="120">120 Minutes</option>
+                    </select>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                    <button type="submit" class="btn btn-primary w-100" style="justify-content: center;">
+                        🗓️ Confirm Schedule
+                    </button>
+                    <a href="{{ url_for('view_all_chats') }}" class="btn btn-outline w-100"
+                        style="margin-top: 0.5rem; justify-content: center;">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

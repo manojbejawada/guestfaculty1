@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Live Class - {{ online_class.subject }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+            <h1 style="font-size: 1.75rem; color: var(--text-primary);">{{ online_class.subject }}</h1>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Host: {{ online_class.faculty.full_name }} | {{ online_class.college.college_name }}
+            </p>
+        </div>
+        <a href="{{ url_for('view_classes') }}" class="btn btn-secondary">Leave Class</a>
+    </div>
+
+    <!-- Jitsi Meet Container -->
+    <div id="meet"
+        style="height: 600px; width: 100%; border-radius: var(--radius-lg); overflow: hidden; border: 2px solid var(--primary-color); background: #000; position: relative;">
+        <!-- Screen Share Flash Button -->
+        <button id="custom-share-btn" onclick="toggleScreenShare()"
+            style="position: absolute; bottom: 80px; left: 20px; z-index: 10; background: var(--primary-color); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; box-shadow: var(--shadow-lg);">
+            <i class="fas fa-desktop"></i> Share Screen
+        </button>
+
+        <div
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: white;">
+            <div class="spinner"></div>
+            <p>Initializing Secure Video Connection...</p>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <h3 style="color: var(--primary-light); margin-bottom: 0.75rem; font-size: 1.1rem;">Session Information</h3>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">
+            You are now in a secure live session. This class is private and unauthorized users are not allowed to join.
+            The session link is active for the scheduled duration and will expire thereafter.
+        </p>
+    </div>
+</div>
+
+<script src="https://meet.jit.si/external_api.js"></script>
+<script>
+    const domain = 'meet.jit.si';
+    // Use the secure token as the room name for uniqueness
+    const options = {
+        roomName: 'GuestFaculty-{{ online_class.secure_token }}',
+        width: '100%',
+        height: '100%',
+        parentNode: document.querySelector('#meet'),
+        userInfo: {
+            displayName: '{% if current_user.user_type == "faculty" %}{{ current_user.faculty_profile.full_name }}{% elif current_user.user_type == "college" %}{{ current_user.college_profile.contact_person }}{% else %}{{ current_user.student_profile.full_name }}{% endif %}'
+        },
+        configOverwrite: {
+            startWithAudioMuted: true,
+            disableThirdPartyRequests: true,
+            prejoinPageEnabled: false
+        },
+        interfaceConfigOverwrite: {
+            TOOLBAR_BUTTONS: [
+                'microphone', 'camera', 'closedcaptions', 'desktop', 'embedmeeting', 'fullscreen',
+                'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+                'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+                'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
+                'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
+                'security'
+            ],
+            SETTINGS_SECTIONS: ['devices', 'language', 'moderator', 'profile', 'calendar'],
+        }
+    };
+    const api = new JitsiMeetExternalAPI(domain, options);
+
+    function toggleScreenShare() {
+        api.executeCommand('toggleShareScreen');
+    }
+
+    // Handle screen sharing events to update button text
+    api.addEventListener('screenSharingStatusChanged', function (event) {
+        const btn = document.getElementById('custom-share-btn');
+        if (event.on) {
+            btn.innerHTML = '<i class="fas fa-stop-circle"></i> Stop Sharing';
+            btn.style.background = 'var(--error-color)';
+        } else {
+            btn.innerHTML = '<i class="fas fa-desktop"></i> Share Screen';
+            btn.style.background = 'var(--primary-color)';
+        }
+    });
+
+    api.addEventListeners({
+        readyToClose: function () {
+            window.location.href = "{{ url_for('view_classes') }}";
+        }
+    });
+</script>
+{% endblock %}

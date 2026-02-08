@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Student Requests{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <h1 style="margin-bottom: 0.5rem;">Student Faculty Requests</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">See what subjects students are looking for faculty in
+    </p>
+
+    <section>
+        <h2 style="margin-bottom: 1.5rem; color: var(--text-primary);">Open Requests ({{ requests|length }})</h2>
+
+        {% if requests %}
+        <div class="grid grid-3">
+            {% for req in requests %}
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <h3
+                            style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                            {{ req.subject }}
+                        </h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem;">
+                            by {{ req.student.full_name }}
+                        </p>
+                    </div>
+                    {% if req.urgency == 'High' %}
+                    <span class="badge badge-error">High Priority</span>
+                    {% elif req.urgency == 'Medium' %}
+                    <span class="badge badge-warning">Medium</span>
+                    {% else %}
+                    <span class="badge badge-info">Low Priority</span>
+                    {% endif %}
+                </div>
+
+                {% if req.description %}
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    {{ req.description[:150] }}{% if req.description|length > 150 %}...{% endif %}
+                </p>
+                {% endif %}
+
+                <div style="padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    {% if req.student.college_name %}
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">
+                        🏛️ {{ req.student.college_name }}
+                    </p>
+                    {% endif %}
+                    {% if req.student.city %}
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">
+                        📍 {{ req.student.city }}
+                    </p>
+                    {% endif %}
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">
+                        Posted {{ req.posted_at.strftime('%b %d, %Y') }}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card">
+            <div style="text-align: center; padding: 3rem 1rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">📝</div>
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem;">No Student Requests</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">There are no student faculty requests at
+                    the moment. Check back later!</p>
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Register as Student</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    {% if not current_user.is_authenticated %}
+    <section class="mt-4">
+        <div class="card"
+            style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1)); text-align: center;">
+            <h3 style="color: var(--info-color); margin-bottom: 1rem;">Are you a student looking for faculty?</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Create a student account to post your
+                faculty requirements and help your institution.</p>
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Create Student Account</a>
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

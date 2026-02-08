@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - Guest Faculty System{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 4rem;">
+    <!-- Profile Header Section -->
+    <div class="profile-header">
+        <div class="profile-avatar" style="background: linear-gradient(135deg, var(--info-color), #2563eb);">
+            {{ profile.full_name[0] if profile.full_name else 'S' }}
+        </div>
+        <div style="flex: 1;">
+            <h1 style="margin-bottom: 0.25rem; font-weight: 800;">Welcome, {{ profile.full_name or 'Student' }}</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 0.75rem;">
+                <i class="fas fa-student"></i> {{ current_user.email }}
+                {% if profile.college_name %}
+                <span style="margin: 0 0.5rem; opacity: 0.3;">|</span> <i class="fas fa-university"></i> {{
+                profile.college_name }}
+                {% endif %}
+            </p>
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <span class="badge badge-info"
+                    style="background: rgba(59, 130, 246, 0.1); color: var(--info-color); border: 1px solid rgba(59, 130, 246, 0.2);">Student
+                    Portal</span>
+                {% if profile.course %}
+                <span class="badge" style="background: rgba(255, 255, 255, 0.05);">{{ profile.course }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="{{ url_for('student_profile') }}" class="btn btn-outline" style="font-size: 0.9rem;">Edit
+                Profile</a>
+            <a href="{{ url_for('post_student_request') }}" class="btn btn-primary"
+                style="box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">Post Request</a>
+        </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="grid grid-3 mb-4 mt-4">
+        <div class="card" style="text-align: center; border-bottom: 3px solid var(--info-color);">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">📝</div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">{{ requests|length }}</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                My Requests</p>
+        </div>
+        <div class="card" style="text-align: center; border-bottom: 3px solid var(--success-color);">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">✅</div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">{{
+                requests|selectattr('status', 'equalto', 'Open')|list|length }}</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                Active</p>
+        </div>
+        <div class="card" style="text-align: center; border-bottom: 3px solid var(--primary-color);">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🔍</div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">Find</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                Experts</p>
+        </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
+        <!-- Main Content: Requests List -->
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 700;">Your Recent Requests</h2>
+                <a href="{{ url_for('post_student_request') }}"
+                    style="color: var(--primary-light); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Post
+                    New</a>
+            </div>
+
+            {% if requests %}
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                {% for req in requests %}
+                <div class="card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                        <div>
+                            <h3
+                                style="font-size: 1.2rem; font-weight: 700; color: var(--info-color); margin-bottom: 0.25rem;">
+                                {{ req.subject }}</h3>
+                            <p style="color: var(--text-muted); font-size: 0.8rem;"><i class="fas fa-clock"></i> Posted
+                                {{ req.posted_at.strftime('%b %d, %Y') }}</p>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            {% if req.urgency == 'High' %}
+                            <span class="badge badge-error">High</span>
+                            {% elif req.urgency == 'Medium' %}
+                            <span class="badge badge-warning">Medium</span>
+                            {% else %}
+                            <span class="badge badge-info">Low</span>
+                            {% endif %}
+                            <span
+                                class="badge {% if req.status == 'Open' %}badge-success{% else %}badge-error{% endif %}">{{
+                                req.status }}</span>
+                        </div>
+                    </div>
+
+                    {% if req.description %}
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1rem;">
+                        {{ req.description }}</p>
+                    {% endif %}
+
+                    <div
+                        style="display: flex; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <a href="#" class="btn btn-outline btn-sm">Edit Request</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="card" style="text-align: center; padding: 3rem 1rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">✍️</div>
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">Need a Faculty Member?</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Post a request for a specific subject
+                    and let faculty members reach out to you.</p>
+                <a href="{{ url_for('post_student_request') }}" class="btn btn-secondary">Post Request Now</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Sidebar -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="card"
+                style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(99, 102, 241, 0.05)); border-color: var(--info-color);">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem; color: var(--info-color);">Search Faculty</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem;">Looking for an
+                    expert? Search our database directly.</p>
+                <a href="{{ url_for('student_search_faculty') }}" class="btn btn-primary w-100"
+                    style="justify-content: center;">
+                    <i class="fas fa-search me-2"></i> Search Database
+                </a>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 1.25rem; font-size: 1.1rem; color: var(--text-primary);">Quick Actions</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="{{ url_for('browse_requirements') }}" class="btn btn-outline w-100"
+                        style="justify-content: flex-start; font-size: 0.85rem; border-color: var(--border-color);">
+                        <i class="fas fa-briefcase me-2"></i> Browse College Posts
+                    </a>
+                    <a href="{{ url_for('view_classes') }}" class="btn btn-outline w-100"
+                        style="justify-content: flex-start; font-size: 0.85rem; border-color: var(--border-color);">
+                        <i class="fas fa-video me-2"></i> Join Online Class
+                    </a>
+                    <a href="{{ url_for('student_profile') }}" class="btn btn-outline w-100"
+                        style="justify-content: flex-start; font-size: 0.85rem; border-color: var(--border-color);">
+                        <i class="fas fa-user-circle me-2"></i> Update Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="card" style="background: rgba(16, 185, 129, 0.05); border-color: var(--success-color);">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1rem; color: var(--success-color);">Academic Tip</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem;">Keep your requests specific to a subject to
+                    get better responses from specialized faculty.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media (max-width: 850px) {
+        .grid[style*="grid-template-columns: 2fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}

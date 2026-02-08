@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Connection Requests{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <h1>Connection Requests</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Manage requests from colleges interested in your
+        profile</p>
+
+    {% if requests %}
+    <div class="grid grid-1">
+        {% for request in requests %}
+        <div class="card" style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                    <h3 style="margin-bottom: 0.5rem;">{{ request.college.college_name }}</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
+                        📍 {{ request.college.city }}, {{ request.college.state }}
+                    </p>
+                    <div style="background: var(--bg-light); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <p style="font-style: italic; color: var(--text-primary);">"{{ request.message }}"</p>
+                    </div>
+                </div>
+                <div>
+                    {% if request.status == 'Pending' %}
+                    <span class="badge badge-warning">Pending</span>
+                    {% elif request.status == 'Accepted' %}
+                    <span class="badge badge-success">Accepted</span>
+                    {% else %}
+                    <span class="badge badge-error">Rejected</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div
+                style="display: flex; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 0.5rem;">
+                {% if request.status == 'Pending' %}
+                <a href="{{ url_for('respond_request', request_id=request.id, action='accept') }}"
+                    class="btn btn-primary">
+                    ✓ Accept Request
+                </a>
+                <a href="{{ url_for('respond_request', request_id=request.id, action='reject') }}"
+                    class="btn btn-outline" style="color: var(--error);">
+                    ✗ Reject
+                </a>
+                {% elif request.status == 'Accepted' %}
+                <a href="{{ url_for('chat', other_user_id=request.college.user_id) }}" class="btn btn-secondary">
+                    💬 Start Chat
+                </a>
+                {% endif %}
+                <span style="margin-left: auto; color: var(--text-secondary); font-size: 0.8rem; align-self: center;">
+                    Received on {{ request.created_at.strftime('%d %b %Y') }}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <p style="color: var(--text-secondary);">You haven't received any connection requests yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

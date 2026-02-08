@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Guest Faculty System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>🎓 Guest Faculty Information System</h1>
+        <p>Bridging the gap between colleges, faculty, and students. Find the perfect match for teaching opportunities
+            and educational needs.</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
+            <a href="{{ url_for('browse_requirements') }}" class="btn btn-outline">Browse Opportunities</a>
+        </div>
+    </section>
+
+    <section class="mt-4">
+        <h2 class="text-center mb-3" style="font-size: 2rem; color: var(--text-primary);">How It Works</h2>
+        <div class="grid grid-3">
+            <div class="card">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">👨‍🏫</div>
+                <h3 style="text-align: center; margin-bottom: 1rem; color: var(--primary-light);">For Faculty</h3>
+                <p style="color: var(--text-secondary); text-align: center;">Create your profile, list your subjects of
+                    expertise, and get discovered by colleges looking for talented educators.</p>
+                <ul style="margin-top: 1rem; color: var(--text-secondary); list-style: none;">
+                    <li style="padding: 0.5rem 0;">✓ Build professional profile</li>
+                    <li style="padding: 0.5rem 0;">✓ List teaching subjects</li>
+                    <li style="padding: 0.5rem 0;">✓ Secure internal chat</li>
+                    <li style="padding: 0.5rem 0;">✓ View job opportunities</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🏛️</div>
+                <h3 style="text-align: center; margin-bottom: 1rem; color: var(--secondary-color);">For Colleges</h3>
+                <p style="color: var(--text-secondary); text-align: center;">Search qualified faculty members, post
+                    hiring requirements, and find the perfect match for your institution.</p>
+                <ul style="margin-top: 1rem; color: var(--text-secondary); list-style: none;">
+                    <li style="padding: 0.5rem 0;">✓ Search faculty database</li>
+                    <li style="padding: 0.5rem 0;">✓ Post job requirements</li>
+                    <li style="padding: 0.5rem 0;">✓ Filter by subject & experience</li>
+                    <li style="padding: 0.5rem 0;">✓ Secure internal messaging</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">👨‍🎓</div>
+                <h3 style="text-align: center; margin-bottom: 1rem; color: var(--info-color);">For Students</h3>
+                <p style="color: var(--text-secondary); text-align: center;">Search for faculty in specific subjects,
+                    post requirements, and help your institution find quality educators.</p>
+                <ul style="margin-top: 1rem; color: var(--text-secondary); list-style: none;">
+                    <li style="padding: 0.5rem 0;">✓ Search faculty by subject</li>
+                    <li style="padding: 0.5rem 0;">✓ Post faculty requirements</li>
+                    <li style="padding: 0.5rem 0;">✓ View faculty profiles</li>
+                    <li style="padding: 0.5rem 0;">✓ Help improve education</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="mt-4">
+        <div class="card"
+            style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1)); text-align: center; padding: 3rem 2rem;">
+            <h2
+                style="font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary-light), var(--secondary-color)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                Ready to Get Started?</h2>
+            <p
+                style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Join our community of educators, institutions, and students working together to improve education.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="{{ url_for('register') }}" class="btn btn-primary"
+                    style="font-size: 1.1rem; padding: 1rem 2rem;">Create Account</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline"
+                    style="font-size: 1.1rem; padding: 1rem 2rem;">Sign In</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="mt-4 mb-4">
+        <h2 class="text-center mb-3" style="font-size: 2rem; color: var(--text-primary);">Key Features</h2>
+        <div class="grid grid-2">
+            <div class="card">
+                <h3 style="color: var(--primary-light); margin-bottom: 1rem;">🔍 Smart Search</h3>
+                <p style="color: var(--text-secondary);">Advanced filtering by subject, location, experience, and
+                    qualifications to find the perfect match.</p>
+            </div>
+            <div class="card">
+                <h3 style="color: var(--primary-light); margin-bottom: 1rem;">📋 Requirement Board</h3>
+                <p style="color: var(--text-secondary);">Colleges can post detailed hiring requirements visible to all
+                    registered faculty members.</p>
+            </div>
+            <div class="card">
+                <h3 style="color: var(--primary-light); margin-bottom: 1rem;">💬 Secure Chat</h3>
+                <p style="color: var(--text-secondary);">Communicate safely within the platform without sharing personal
+                    contact details until a connection is established.</p>
+            </div>
+            <div class="card">
+                <h3 style="color: var(--primary-light); margin-bottom: 1rem;">🎯 Student Requests</h3>
+                <p style="color: var(--text-secondary);">Students can request faculty for specific subjects, helping
+                    institutions identify needs.</p>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

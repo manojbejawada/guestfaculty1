@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Post Faculty Request{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <div style="max-width: 700px; margin: 0 auto;">
+        <h1 style="margin-bottom: 0.5rem;">Post Faculty Request</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Request faculty for a specific subject or need</p>
+
+        <form method="POST" action="{{ url_for('post_student_request') }}">
+            <div class="card">
+                <h3 style="color: var(--info-color); margin-bottom: 1.5rem;">Request Details</h3>
+
+                <div class="form-group">
+                    <label for="subject">Subject/Area *</label>
+                    <input type="text" id="subject" name="subject" required
+                        placeholder="e.g., Advanced Mathematics, Web Development">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="5"
+                        placeholder="Describe what kind of faculty you need, for what purpose, any specific requirements..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="urgency">Urgency Level</label>
+                    <select id="urgency" name="urgency">
+                        <option value="Low">Low - Can wait</option>
+                        <option value="Medium" selected>Medium - Moderate priority</option>
+                        <option value="High">High - Urgent need</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card mt-3" style="background: rgba(59, 130, 246, 0.1); border-color: var(--info-color);">
+                <h3 style="color: var(--info-color); margin-bottom: 1rem;">ℹ️ Note</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Your request will be visible to faculty members and colleges. This helps identify demands and
+                    connect the right educators with students who need them.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Post Request</button>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

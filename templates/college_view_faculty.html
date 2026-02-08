@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ faculty.full_name }} - Profile{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 4rem;">
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{{ url_for('search_faculty') }}" style="text-decoration: none; color: var(--text-secondary);">&larr;
+            Back to Search</a>
+    </div>
+
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {{ faculty.full_name[0] if faculty.full_name else 'F' }}
+        </div>
+        <div style="flex: 1;">
+            <h1 style="margin-bottom: 0.25rem;">{{ faculty.full_name }}</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 0.75rem;">
+                <i class="fas fa-graduation-cap"></i> {{ faculty.qualification }}
+                {% if faculty.location %}
+                <span style="margin: 0 0.5rem; opacity: 0.3;">|</span> <i class="fas fa-map-marker-alt"></i> {{
+                faculty.location }}
+                {% endif %}
+            </p>
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <span
+                    class="badge {% if faculty.availability == 'Available' %}badge-success{% elif faculty.availability == 'Partially Available' %}badge-warning{% else %}badge-error{% endif %}">
+                    {{ faculty.availability or 'Available' }}
+                </span>
+                {% if faculty.experience_years %}
+                <span class="badge badge-info">{{ faculty.experience_years }} Years Experience</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="card">
+                <h3 style="color: var(--primary-light); margin-bottom: 1.25rem;">Expertise & Subjects</h3>
+                <div class="faculty-subjects">
+                    {% if faculty.subjects %}
+                    {% for subject in faculty.subjects.split(',') %}
+                    <span class="subject-tag">{{ subject.strip() }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                {% if faculty.specialization %}
+                <div style="margin-top: 1.5rem;">
+                    <h4 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase;">Specialization
+                    </h4>
+                    <p style="margin-top: 0.5rem;">{{ faculty.specialization }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h3 style="color: var(--primary-light); margin-bottom: 1.25rem;">Professional Bio</h3>
+                <div style="line-height: 1.8; color: var(--text-secondary); white-space: pre-line;">
+                    {{ faculty.bio or 'No bio provided.' }}
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="card" style="border-color: var(--primary-color);">
+                <h3 style="margin-bottom: 1.25rem; font-size: 1.25rem;">Connect with Faculty</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                    Interested in hiring this faculty member? Send a connection request to start a secure conversation.
+                </p>
+
+                <form action="{{ url_for('send_connection_request', faculty_id=faculty.id) }}" method="POST">
+                    <div class="form-group">
+                        <textarea name="message"
+                            placeholder="Optional: Include a brief message to introduce your institution..."
+                            style="min-height: 100px; font-size: 0.9rem;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" style="justify-content: center;">
+                        🤝 Send Request
+                    </button>
+                </form>
+
+                <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+                    Privacy Note: Your contact details will only be visible after they accept your request.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

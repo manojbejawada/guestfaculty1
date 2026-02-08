@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Post Requirement{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <div style="max-width: 700px; margin: 0 auto;">
+        <h1 style="margin-bottom: 0.5rem;">Post Faculty Requirement</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Share your hiring needs with qualified faculty
+            members</p>
+
+        <form method="POST" action="{{ url_for('post_requirement') }}">
+            <div class="card">
+                <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Position Details</h3>
+
+                <div class="form-group">
+                    <label for="subject">Subject/Position *</label>
+                    <input type="text" id="subject" name="subject" required
+                        placeholder="e.g., Computer Science, Mathematics, Physics">
+                </div>
+
+                <div class="form-group">
+                    <label for="employment_type">Employment Type *</label>
+                    <select id="employment_type" name="employment_type" required>
+                        <option value="">Select type</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Visiting">Visiting Faculty</option>
+                        <option value="Guest Lecture">Guest Lecture</option>
+                        <option value="Contract">Contract</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Job Description</label>
+                    <textarea id="description" name="description" rows="5"
+                        placeholder="Describe the position, responsibilities, and any other relevant details..."></textarea>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Requirements</h3>
+
+                <div class="form-group">
+                    <label for="qualification_required">Required Qualification</label>
+                    <input type="text" id="qualification_required" name="qualification_required"
+                        placeholder="e.g., M.Sc., Ph.D. in relevant field">
+                </div>
+
+                <div class="form-group">
+                    <label for="experience_required">Minimum Experience (years)</label>
+                    <input type="number" id="experience_required" name="experience_required" min="0"
+                        placeholder="e.g., 3">
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" placeholder="e.g., Mumbai, Maharashtra">
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Compensation</h3>
+
+                <div class="form-group">
+                    <label for="salary_range">Salary Range</label>
+                    <input type="text" id="salary_range" name="salary_range"
+                        placeholder="e.g., ₹30,000 - ₹50,000 per month">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-secondary" style="flex: 1;">Post Requirement</button>
+                <a href="{{ url_for('college_dashboard') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

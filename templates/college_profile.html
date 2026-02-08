@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - College{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <div style="max-width: 700px; margin: 0 auto;">
+        <h1 style="margin-bottom: 0.5rem;">Edit College Profile</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Provide information about your institution</p>
+
+        <form method="POST" action="{{ url_for('college_profile') }}">
+            <div class="card">
+                <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Institution Information</h3>
+
+                <div class="form-group">
+                    <label for="college_name">College/Institution Name *</label>
+                    <input type="text" id="college_name" name="college_name" required
+                        value="{{ profile.college_name or '' }}" placeholder="ABC University">
+                </div>
+
+                <div class="form-group">
+                    <label for="contact_person">Contact Person</label>
+                    <input type="text" id="contact_person" name="contact_person"
+                        value="{{ profile.contact_person or '' }}" placeholder="Dr. Jane Smith (Dean)">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Contact Phone Number</label>
+                    <input type="tel" id="phone" name="phone" value="{{ profile.phone or '' }}"
+                        placeholder="+1 234 567 8900">
+                </div>
+
+                <div class="form-group">
+                    <label for="affiliation">Affiliation</label>
+                    <input type="text" id="affiliation" name="affiliation" value="{{ profile.affiliation or '' }}"
+                        placeholder="UGC, AICTE, State Board">
+                </div>
+
+                <div class="form-group">
+                    <label for="website">College Website</label>
+                    <input type="url" id="website" name="website" value="{{ profile.website or '' }}"
+                        placeholder="https://www.yourcollege.edu">
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Location Details</h3>
+
+                <div class="form-group">
+                    <label for="address">Full Address</label>
+                    <textarea id="address" name="address" rows="3"
+                        placeholder="123 Education Street, Building Name">{{ profile.address or '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" value="{{ profile.city or '' }}" placeholder="Mumbai">
+                </div>
+
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" name="state" value="{{ profile.state or '' }}"
+                        placeholder="Maharashtra">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-secondary" style="flex: 1;">Save Profile</button>
+                <a href="{{ url_for('college_dashboard') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

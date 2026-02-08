@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Online Classes{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+            <h1>Online Classes</h1>
+            <p style="color: var(--text-secondary);">Manage your virtual teaching sessions</p>
+            <p style="font-size: 0.8rem; color: var(--primary-light); margin-top: 0.25rem;">Current Server Time: {{
+                now.strftime('%H:%M') }}</p>
+        </div>
+        {% if current_user.user_type == 'college' %}
+        <a href="{{ url_for('view_all_chats') }}" class="btn btn-secondary">Connect & Schedule</a>
+        {% endif %}
+    </div>
+
+    {% if classes %}
+    <div class="grid grid-1">
+        {% for cls in classes %}
+        <div class="card class-card {{ 'completed' if cls.status == 'Completed' }}" style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                    <h3 style="color: var(--primary-light); margin-bottom: 0.5rem;">{{ cls.subject }}</h3>
+                    <p style="margin-bottom: 0.5rem;">
+                        {% if current_user.user_type == 'college' %}
+                        👨‍🏫 Faculty: {{ cls.faculty.full_name }}
+                        {% else %}
+                        🏫 College: {{ cls.college.college_name }}
+                        {% endif %}
+                    </p>
+                    <div style="display: flex; gap: 1.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+                        <span>📅 {{ cls.schedule_time.strftime('%d %b %Y') }}</span>
+                        <span>⏰ {{ cls.schedule_time.strftime('%H:%M') }}</span>
+                        <span>⏱️ {{ cls.duration_minutes }} Mins</span>
+                    </div>
+                </div>
+                <div>
+                    {% if cls.status == 'Scheduled' %}
+                    <span class="badge badge-success">Scheduled</span>
+                    {% elif cls.status == 'Completed' %}
+                    <span class="badge badge-info">Completed</span>
+                    {% else %}
+                    <span class="badge badge-error">{{ cls.status }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                {% if cls.status == 'Scheduled' %}
+                <a href="{{ cls.meeting_link }}" class="btn btn-primary">
+                    🔗 Join Class Now
+                </a>
+                {% else %}
+                <span style="color: var(--text-muted); font-size: 0.9rem;">Session concluded</span>
+                {% endif %}
+
+                <small style="color: var(--text-muted);">ID: #{{ cls.secure_token[:8] }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 4rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🎥</div>
+        <p style="color: var(--text-secondary);">No classes scheduled yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

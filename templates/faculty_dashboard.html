@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}Faculty Dashboard - Guest Faculty System{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 4rem;">
+    <!-- Profile Header Section -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {{ profile.full_name[0] if profile.full_name else 'F' }}
+        </div>
+        <div style="flex: 1;">
+            <h1 style="margin-bottom: 0.25rem; font-weight: 800;">Welcome, {{ profile.full_name or 'Faculty Member' }}
+            </h1>
+            <p style="color: var(--text-secondary); margin-bottom: 0.75rem;">
+                <i class="fas fa-envelope"></i> {{ current_user.email }}
+                {% if profile.location %}
+                <span style="margin: 0 0.5rem; opacity: 0.3;">|</span> <i class="fas fa-map-marker-alt"></i> {{
+                profile.location }}
+                {% endif %}
+            </p>
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <span class="badge badge-info">{{ profile.availability or 'Available' }}</span>
+                {% if profile.qualification %}
+                <span class="badge"
+                    style="background: rgba(99, 102, 241, 0.1); color: var(--primary-light); border: 1px solid rgba(99, 102, 241, 0.2);">{{
+                    profile.qualification }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div>
+            <a href="{{ url_for('faculty_profile') }}" class="btn btn-primary" style="box-shadow: var(--shadow-glow);">
+                Edit Profile
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="grid grid-3 mb-4 mt-4">
+        <div class="card" style="text-align: center; border-bottom: 3px solid var(--primary-color);">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">📚</div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">{{
+                profile.subjects.split(',')|length if profile.subjects else 0 }}</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                Expertise Areas</p>
+        </div>
+        <div class="card" style="text-align: center; border-bottom: 3px solid var(--secondary-color);">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">⏱️</div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">{{ profile.experience_years or
+                0 }}</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                Years Exp.</p>
+        </div>
+        <div class="card" style="text-align: center; border-bottom: 3px solid var(--success-color);">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🎯</div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">{{ requirements|length }}</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                Matched Jobs</p>
+        </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1fr 2fr; gap: 2rem; align-items: start;">
+        <!-- Left Sidebar: Profile Summary -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            {% if not profile.full_name or not profile.subjects %}
+            <div class="card"
+                style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); animation: pulse 2s infinite;">
+                <h3 style="color: var(--error-color); margin-bottom: 0.5rem; font-size: 1.1rem;">⚠️ Action Required</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Complete your profile
+                    to increase your visibility to colleges.</p>
+                <a href="{{ url_for('faculty_profile') }}" class="btn btn-secondary btn-sm w-100">Complete Profile</a>
+            </div>
+            {% endif %}
+
+            <div class="card">
+                <h3 style="margin-bottom: 1.25rem; font-size: 1.2rem; color: var(--primary-light);">My Expertise</h3>
+                <div class="faculty-subjects">
+                    {% if profile.subjects %}
+                    {% for subject in profile.subjects.split(',') %}
+                    <span class="subject-tag" style="margin-bottom: 0.5rem;">{{ subject.strip() }}</span>
+                    {% endfor %}
+                    {% else %}
+                    <p style="color: var(--text-muted); font-size: 0.9rem; font-style: italic;">No subjects added yet.
+                    </p>
+                    {% endif %}
+                </div>
+
+                <div style="height: 1px; background: var(--border-color); margin: 1.5rem 0;"></div>
+
+                <h3 style="margin-bottom: 1.25rem; font-size: 1.2rem; color: var(--primary-light);">Quick Access</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="{{ url_for('view_faculty_requests') }}" class="btn btn-primary w-100"
+                        style="justify-content: center; font-size: 0.9rem;">
+                        <i class="fas fa-handshake me-2"></i> Connection Requests
+                    </a>
+                    <a href="{{ url_for('view_all_chats') }}" class="btn btn-secondary w-100"
+                        style="justify-content: center; font-size: 0.9rem;">
+                        <i class="fas fa-comments me-2"></i> My Messages
+                    </a>
+                    <a href="{{ url_for('browse_requirements') }}" class="btn btn-outline w-100"
+                        style="justify-content: center; font-size: 0.9rem;">
+                        <i class="fas fa-search me-2"></i> Browse All Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content: Opportunities -->
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 700;">Matched Opportunities</h2>
+                <a href="{{ url_for('browse_requirements') }}"
+                    style="color: var(--primary-light); text-decoration: none; font-size: 0.9rem; font-weight: 600;">View
+                    all</a>
+            </div>
+
+            {% if requirements %}
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                {% for req in requirements[:5] %}
+                <div class="requirement-card"
+                    style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color);">
+                    <div class="requirement-header">
+                        <div>
+                            <h3 class="requirement-title" style="color: var(--primary-light);">{{ req.subject }}</h3>
+                            <p class="requirement-college" style="font-weight: 600;">{{ req.college.college_name }}</p>
+                        </div>
+                        <span class="badge badge-success"
+                            style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2);">{{
+                            req.employment_type }}</span>
+                    </div>
+
+                    <p
+                        style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.5;">
+                        {{ req.description[:180] }}{% if req.description|length > 180 %}...{% endif %}
+                    </p>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <div style="display: flex; gap: 1rem; color: var(--text-muted); font-size: 0.85rem;">
+                            <span><i class="fas fa-map-marker-alt"></i> {{ req.location or req.college.city }}</span>
+                            <span><i class="fas fa-calendar-alt"></i> {{ req.posted_at.strftime('%b %d') }}</span>
+                        </div>
+                        <a href="#" class="btn btn-secondary btn-sm" style="padding: 0.4rem 1rem;">Details</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="card" style="text-align: center; padding: 3rem 1rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">🔍</div>
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">No matches yet</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">We'll notify you when roles matching
+                    your expertise are posted.</p>
+                <a href="{{ url_for('faculty_profile') }}" class="btn btn-primary">Update Expertise</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    @media (max-width: 850px) {
+        .grid[style*="grid-template-columns: 1fr 2fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}

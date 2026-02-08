@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Requirements{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <h1 style="margin-bottom: 0.5rem;">Browse Faculty Requirements</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Explore open positions posted by colleges and
+        institutions</p>
+
+    <section>
+        <h2 style="margin-bottom: 1.5rem; color: var(--text-primary);">Open Positions ({{ requirements|length }})</h2>
+
+        {% if requirements %}
+        <div class="grid grid-2">
+            {% for req in requirements %}
+            <div class="requirement-card">
+                <div class="requirement-header">
+                    <div>
+                        <h3 class="requirement-title">{{ req.subject }}</h3>
+                        <p class="requirement-college">{{ req.college.college_name }}</p>
+                        {% if req.college.city %}
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.25rem;">
+                            📍 {{ req.college.city }}{% if req.college.state %}, {{ req.college.state }}{% endif %}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <span class="badge badge-success">Open</span>
+                </div>
+
+                {% if req.description %}
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    {{ req.description[:200] }}{% if req.description|length > 200 %}...{% endif %}
+                </p>
+                {% endif %}
+
+                <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+                    {% if req.qualification_required %}
+                    <div
+                        style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+                        <span>📚</span>
+                        <span>{{ req.qualification_required }}</span>
+                    </div>
+                    {% endif %}
+                    {% if req.experience_required %}
+                    <div
+                        style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+                        <span>⏱️</span>
+                        <span>{{ req.experience_required }}+ years</span>
+                    </div>
+                    {% endif %}
+                    {% if req.location %}
+                    <div
+                        style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+                        <span>📍</span>
+                        <span>{{ req.location }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <div>
+                        <span class="badge badge-info" style="margin-right: 0.5rem;">{{ req.employment_type }}</span>
+                        {% if req.salary_range %}
+                        <span style="font-size: 0.875rem; color: var(--primary-light);">💰 {{ req.salary_range }}</span>
+                        {% endif %}
+                    </div>
+                    <span style="font-size: 0.875rem; color: var(--text-muted);">{{ req.posted_at.strftime('%b %d, %Y')
+                        }}</span>
+                </div>
+
+                {% if req.college.phone or req.college.user.email %}
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 0.5rem;">Contact:</p>
+                    {% if req.college.phone %}
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                        📞 {{ req.college.phone }}
+                    </p>
+                    {% endif %}
+                    {% if req.college.user.email %}
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        ✉️ {{ req.college.user.email }}
+                    </p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card">
+            <div style="text-align: center; padding: 3rem 1rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">📋</div>
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem;">No Open Requirements</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">There are no open faculty requirements
+                    at the moment. Check back later!</p>
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Register as College</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    {% if not current_user.is_authenticated %}
+    <section class="mt-4">
+        <div class="card"
+            style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1)); text-align: center;">
+            <h3 style="color: var(--primary-light); margin-bottom: 1rem;">Want to apply for these positions?</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Create a faculty account to showcase your
+                expertise and get contacted by colleges.</p>
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Create Faculty Account</a>
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

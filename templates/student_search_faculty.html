@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Faculty - Student{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <h1 style="margin-bottom: 0.5rem;">Search Faculty</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Find faculty members for specific subjects</p>
+
+    <div class="card">
+        <form method="GET" action="{{ url_for('student_search_faculty') }}" class="search-bar">
+            <input type="text" name="subject" placeholder="Search by subject (e.g., Mathematics, Physics)"
+                value="{{ request.args.get('subject', '') }}">
+            <input type="text" name="location" placeholder="Search by location (e.g., Mumbai, Delhi)"
+                value="{{ request.args.get('location', '') }}">
+            <button type="submit" class="btn btn-primary">🔍 Search</button>
+        </form>
+    </div>
+
+    <section class="mt-4">
+        <h2 style="margin-bottom: 1.5rem; color: var(--text-primary);">
+            {% if request.args.get('subject') or request.args.get('location') %}
+            Search Results ({{ faculties|length }})
+            {% else %}
+            All Available Faculty ({{ faculties|length }})
+            {% endif %}
+        </h2>
+
+        {% if faculties %}
+        <div class="grid grid-2">
+            {% for faculty in faculties %}
+            <div class="faculty-card">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <h3 class="faculty-name">{{ faculty.full_name }}</h3>
+                        <p class="faculty-info">{{ faculty.qualification }}</p>
+                        {% if faculty.experience_years %}
+                        <p class="faculty-info">⏱️ {{ faculty.experience_years }} years experience</p>
+                        {% endif %}
+                    </div>
+                    {% if faculty.availability == 'Available' %}
+                    <span class="badge badge-success">Available</span>
+                    {% elif faculty.availability == 'Partially Available' %}
+                    <span class="badge badge-warning">Partially</span>
+                    {% else %}
+                    <span class="badge badge-error">Unavailable</span>
+                    {% endif %}
+                </div>
+
+                {% if faculty.specialization %}
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    <strong>Specialization:</strong> {{ faculty.specialization }}
+                </p>
+                {% endif %}
+
+                {% if faculty.location %}
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    📍 {{ faculty.location }}
+                </p>
+                {% endif %}
+
+                {% if faculty.subjects %}
+                <div class="faculty-subjects">
+                    {% for subject in faculty.subjects.split(',')[:5] %}
+                    <span class="subject-tag">{{ subject.strip() }}</span>
+                    {% endfor %}
+                    {% if faculty.subjects.split(',')|length > 5 %}
+                    <span class="subject-tag">+{{ faculty.subjects.split(',')|length - 5 }} more</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if faculty.bio %}
+                <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.9rem;">
+                    {{ faculty.bio[:200] }}{% if faculty.bio|length > 200 %}...{% endif %}
+                </p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card">
+            <p style="color: var(--text-secondary); text-align: center;">
+                {% if request.args.get('subject') or request.args.get('location') %}
+                No faculty found matching your search criteria. Try adjusting your filters.
+                {% else %}
+                No faculty profiles available yet. Check back later!
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
