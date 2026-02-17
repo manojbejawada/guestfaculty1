@@ -26,4 +26,4 @@ else:
     conn.close()
 
 print(f"\nCurrent Server Time (now): {datetime.now()}")
-print(f"Current Server Time (utcnow): {datetime.utcnow()}")
+print(f"Current Server Time (utcnow): {datetime.utcnow()}") 
